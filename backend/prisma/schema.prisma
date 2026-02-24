@@ -1,0 +1,204 @@
+// Schema untuk database yayasan_cms (Strapi) yang sudah ada
+// JANGAN db push/migrate - hanya baca schema yang ada
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AdminUser {
+  id                   Int       @id @default(autoincrement())
+  documentId           String?   @map("document_id")
+  firstname            String?   @map("firstname")
+  lastname             String?   @map("lastname")
+  username             String?   @map("username")
+  email                String?   @map("email")
+  password             String?   @map("password")
+  resetPasswordToken   String?   @map("reset_password_token")
+  isActive             Boolean?  @map("is_active")
+  blocked              Boolean?  @map("blocked")
+  createdAt            DateTime? @map("created_at")
+  updatedAt            DateTime? @map("updated_at")
+
+  @@map("admin_users")
+}
+
+model Article {
+  id           Int       @id @default(autoincrement())
+  documentId   String?   @map("document_id")
+  title        String?   @map("title")
+  slug         String?   @map("slug")
+  excerpt      String?   @map("excerpt")
+  content      String?   @map("content")
+  createdAt    DateTime? @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+  publishedAt  DateTime? @map("published_at")
+  locale       String?   @map("locale")
+  categoryLnk  ArticlesCategoryLnk[]
+
+  @@map("articles")
+}
+
+model Category {
+  id           Int       @id @default(autoincrement())
+  documentId   String?   @map("document_id")
+  name         String?   @map("name")
+  slug         String?   @map("slug")
+  createdAt    DateTime? @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+  publishedAt  DateTime? @map("published_at")
+  articleLnk   ArticlesCategoryLnk[]
+
+  @@map("categories")
+}
+
+model ArticlesCategoryLnk {
+  id          Int       @id @default(autoincrement())
+  articleId   Int?      @map("article_id")
+  categoryId  Int?      @map("category_id")
+  article     Article?  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@map("articles_category_lnk")
+}
+
+model Program {
+  id           Int       @id @default(autoincrement())
+  documentId   String?   @map("document_id")
+  title        String?   @map("title")
+  slug         String?   @map("slug")
+  description  String?   @map("description")
+  content      String?   @map("content")
+  icon         String?   @map("icon")
+  beneficiaries String? @map("beneficiaries")
+  location     String?   @map("location")
+  order        Int?      @map("order")
+  createdAt    DateTime? @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+  publishedAt  DateTime? @map("published_at")
+  locale       String?   @map("locale")
+
+  @@map("programs")
+}
+
+model Gallery {
+  id           Int       @id @default(autoincrement())
+  documentId   String?   @map("document_id")
+  title        String?   @map("title")
+  description  String?   @map("description")
+  eventDate    DateTime? @map("event_date")
+  createdAt    DateTime? @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+  publishedAt  DateTime? @map("published_at")
+  locale       String?   @map("locale")
+
+  @@map("galleries")
+}
+
+model Contact {
+  id         Int       @id @default(autoincrement())
+  documentId String?   @map("document_id")
+  name       String?   @map("name")
+  email      String?   @map("email")
+  phone      String?   @map("phone")
+  subject    String?   @map("subject")
+  message    String?   @map("message")
+  isRead     Boolean?  @map("is_read")
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+  publishedAt DateTime? @map("published_at")
+  locale     String?   @map("locale")
+
+  @@map("contacts")
+}
+
+model AboutPage {
+  id             Int       @id @default(autoincrement())
+  documentId     String?   @map("document_id")
+  vision         String?   @map("vision")
+  mission        String?   @map("mission")
+  values         String?   @map("values")
+  history        String?   @map("history")
+  establishedYear Int?     @map("established_year")
+  createdAt      DateTime? @map("created_at")
+  updatedAt      DateTime? @map("updated_at")
+  publishedAt    DateTime? @map("published_at")
+  locale         String?   @map("locale")
+
+  @@map("about_pages")
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  documentId String?  @map("document_id")
+  name       String?  @map("name")
+  hash       String?  @map("hash")
+  ext        String?  @map("ext")
+  mime       String?  @map("mime")
+  size       Decimal? @map("size")
+  url        String?  @map("url")
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+  publishedAt DateTime? @map("published_at")
+
+  @@map("files")
+}
+
+// Polymorphic: file_id -> related_id (article/program/gallery/about), related_type, field
+model FileRelatedMph {
+  id           Int     @id @default(autoincrement())
+  fileId       Int?    @map("file_id")
+  relatedId    Int?    @map("related_id")
+  relatedType  String? @map("related_type")
+  field        String? @map("field")
+  order        Float?  @map("order")
+
+  @@map("files_related_mph")
+}
+
+// ─── CMS-managed (backend admin) ─────────────────────────────────────────────
+
+model SiteSetting {
+  id              Int      @id @default(autoincrement())
+  heroText        String?  @map("hero_text")   @db.VarChar(500)
+  tagline         String?  @db.VarChar(500)
+  footerText      String?  @map("footer_text") @db.Text
+  whatsappNumber  String?  @map("whatsapp_number") @db.VarChar(50)
+  ctaCopy         String?  @map("cta_copy")    @db.VarChar(200)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+model DonationAccount {
+  id           Int      @id @default(autoincrement())
+  bankCode     String?  @map("bank_code")   @db.VarChar(20)
+  bankName     String   @map("bank_name")  @db.VarChar(100)
+  accountNo    String   @map("account_no") @db.VarChar(50)
+  accountName  String   @map("account_name") @db.VarChar(100)
+  description  String?  @db.Text
+  sortOrder    Int?     @map("sort_order") @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("donation_accounts")
+}
+
+model BoardMember {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(120)
+  position    String   @db.VarChar(120)
+  description String?  @db.Text
+  photoUrl    String?  @map("photo_url") @db.VarChar(500)
+  sortOrder   Int?     @map("sort_order") @default(0)
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("board_members")
+}

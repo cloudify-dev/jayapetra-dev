@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "programs",
+  "info": {
+    "singularName": "program",
+    "pluralName": "programs",
+    "displayName": "Program Yayasan",
+    "description": "Program dan kegiatan Yakapetra"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 255
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "content": {
+      "type": "richtext"
+    },
+    "icon": {
+      "type": "string",
+      "maxLength": 10
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "beneficiaries": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "order": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}

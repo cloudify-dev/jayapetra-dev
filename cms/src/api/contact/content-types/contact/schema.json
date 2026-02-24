@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contacts",
+  "info": {
+    "singularName": "contact",
+    "pluralName": "contacts",
+    "displayName": "Pesan Kontak",
+    "description": "Pesan masuk dari form kontak website"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "maxLength": 20
+    },
+    "subject": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

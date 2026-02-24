@@ -1,0 +1,37 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_pages",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "Halaman Tentang Kami",
+    "description": "Konten halaman Tentang Kami Yakapetra"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "vision": {
+      "type": "text",
+      "required": true
+    },
+    "mission": {
+      "type": "richtext",
+      "required": true
+    },
+    "values": {
+      "type": "text"
+    },
+    "history": {
+      "type": "richtext"
+    },
+    "hero_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "established_year": {
+      "type": "integer"
+    }
+  }
+}
